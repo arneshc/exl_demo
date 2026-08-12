@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sample Customer Dataset — Liberty Crest Life Insurance (SYNTHETIC / DEMO USE ONLY)
+  ===================================================================================
+  Purpose:
+    Stand-in "customer dataset" for the Agentic Policy Servicing & Retention
+    demo, matching the schema defined in the SOW:
+      - Table 1A: pas_policyholders  -> <Policyholder> attributes/elements
+      - Table 1B: pas_policies       -> <Policy> attributes/elements
+    A bonus <DemoScenarioWiring> block shows one policyholder (Michael Carter)
+    fully wired to a telemetry event, a billing failure, and a story
+    prediction, so the "live trigger simulation" in the demo script has a
+    concrete record to run against.
+
+  Customer base: United States (corrected from an earlier GCC-region draft).
+
+  Coverage of story archetypes (Act I of the demo script):
+    - Buyer's Remorse              -> POL-USA-10221, POL-USA-10334
+    - Flight Risk                  -> POL-USA-88421 (Michael Carter), POL-USA-10556
+    - Low Lapse / Growth Candidate -> POL-USA-10678, POL-USA-10789
+    - No active story (baseline)   -> POL-USA-10890, POL-USA-10905
+
+  All names, emails, phone numbers, and identifiers are fictitious.
+  Do not use for anything other than demo/testing purposes.
+-->
+<InsuranceCustomerDataset schemaVersion="1.0" generatedFor="Liberty Crest Life Insurance Demo" datasetType="synthetic">
+
+  <Metadata>
+    <Description>Synthetic policyholder and policy master data for the Policy Servicing, Retention &amp; In-Force Management agentic AI demo.</Description>
+    <RecordCount policyholders="8" policies="9"/>
+    <Region>United States (multi-state)</Region>
+    <Currency default="USD"/>
+    <Disclaimer>Synthetic data generated for demonstration purposes only. No relation to real individuals or policies.</Disclaimer>
+  </Metadata>
+
+  <Policyholders>
+
+    <!-- ============================================================ -->
+    <!-- 1. Flight Risk — the flagship demo case (Michael Carter)       -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-88421">
+      <FullName>Michael Carter</FullName>
+      <DateOfBirth>1985-06-14</DateOfBirth>
+      <City updatedFrom="Chicago, IL">Austin, TX</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>m.carter@example.com</Email>
+      <Phone>+1-312-555-0147</Phone>
+      <DependentsCount>2</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-88421">
+          <ProductType>Whole Life</ProductType>
+          <FaceAmount currency="USD">250000.00</FaceAmount>
+          <CashValue currency="USD">42500.00</CashValue>
+          <MonthlyPremium currency="USD">450.00</MonthlyPremium>
+          <IssueDate>2022-03-15</IssueDate>
+          <TenureYears>4.3</TenureYears>
+          <PaymentMode riskState="true">Manual Self-Pay</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <!-- ============================================================ -->
+    <!-- 2. Flight Risk — second example, no bonus wiring              -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-10556">
+      <FullName>Sarah Mitchell</FullName>
+      <DateOfBirth>1979-11-02</DateOfBirth>
+      <City>Denver, CO</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>s.mitchell@example.com</Email>
+      <Phone>+1-720-555-0198</Phone>
+      <DependentsCount>1</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10556">
+          <ProductType>Unit-Linked (Variable Life)</ProductType>
+          <FaceAmount currency="USD">500000.00</FaceAmount>
+          <CashValue currency="USD">61250.00</CashValue>
+          <MonthlyPremium currency="USD">610.00</MonthlyPremium>
+          <IssueDate>2020-09-01</IssueDate>
+          <TenureYears>5.9</TenureYears>
+          <PaymentMode riskState="true">Manual Self-Pay</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <!-- ============================================================ -->
+    <!-- 3. Buyer's Remorse — policy under 90 days old                 -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-10221">
+      <FullName>Ashley Thompson</FullName>
+      <DateOfBirth>1992-02-27</DateOfBirth>
+      <City>Charlotte, NC</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>a.thompson@example.com</Email>
+      <Phone>+1-704-555-0112</Phone>
+      <DependentsCount>0</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10221">
+          <ProductType>Whole Life</ProductType>
+          <FaceAmount currency="USD">150000.00</FaceAmount>
+          <CashValue currency="USD">1200.00</CashValue>
+          <MonthlyPremium currency="USD">210.00</MonthlyPremium>
+          <IssueDate>2026-06-02</IssueDate>
+          <TenureYears>0.2</TenureYears>
+          <PaymentMode riskState="true" note="First recurring payment delayed">Manual Self-Pay</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <!-- ============================================================ -->
+    <!-- 4. Buyer's Remorse — second example                           -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-10334">
+      <FullName>David Nguyen</FullName>
+      <DateOfBirth>1990-08-19</DateOfBirth>
+      <City>Seattle, WA</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>d.nguyen@example.com</Email>
+      <Phone>+1-206-555-0176</Phone>
+      <DependentsCount>1</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10334">
+          <ProductType>Term</ProductType>
+          <FaceAmount currency="USD">200000.00</FaceAmount>
+          <CashValue currency="USD">0.00</CashValue>
+          <MonthlyPremium currency="USD">95.00</MonthlyPremium>
+          <IssueDate>2026-05-10</IssueDate>
+          <TenureYears>0.3</TenureYears>
+          <PaymentMode riskState="true" note="First recurring payment delayed">Manual Self-Pay</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <!-- ============================================================ -->
+    <!-- 5. Low Lapse / Growth Candidate — mature, high cash value     -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-10678">
+      <FullName>Robert Johnson</FullName>
+      <DateOfBirth>1975-01-30</DateOfBirth>
+      <City>Atlanta, GA</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>r.johnson@example.com</Email>
+      <Phone>+1-404-555-0134</Phone>
+      <DependentsCount>3</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10678">
+          <ProductType>Whole Life</ProductType>
+          <FaceAmount currency="USD">150000.00</FaceAmount>
+          <CashValue currency="USD">98750.00</CashValue>
+          <MonthlyPremium currency="USD">380.00</MonthlyPremium>
+          <IssueDate>2012-04-18</IssueDate>
+          <TenureYears>14.3</TenureYears>
+          <PaymentMode riskState="false">AutoPay / Direct Debit</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <!-- ============================================================ -->
+    <!-- 6. Low Lapse / Growth Candidate — second example              -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-10789">
+      <FullName>Linda Park</FullName>
+      <DateOfBirth>1968-09-05</DateOfBirth>
+      <City>Phoenix, AZ</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>l.park@example.com</Email>
+      <Phone>+1-602-555-0189</Phone>
+      <DependentsCount>2</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10789">
+          <ProductType>Whole Life</ProductType>
+          <FaceAmount currency="USD">300000.00</FaceAmount>
+          <CashValue currency="USD">187500.00</CashValue>
+          <MonthlyPremium currency="USD">720.00</MonthlyPremium>
+          <IssueDate>2008-11-22</IssueDate>
+          <TenureYears>17.7</TenureYears>
+          <PaymentMode riskState="false">AutoPay / Direct Debit</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <!-- ============================================================ -->
+    <!-- 7 & 8. Baseline policyholders — no active story (control set) -->
+    <!-- ============================================================ -->
+    <Policyholder holderId="USR-USA-10890">
+      <FullName>James O'Brien</FullName>
+      <DateOfBirth>1988-03-11</DateOfBirth>
+      <City>Miami, FL</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>j.obrien@example.com</Email>
+      <Phone>+1-305-555-0155</Phone>
+      <DependentsCount>1</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10890">
+          <ProductType>Term</ProductType>
+          <FaceAmount currency="USD">180000.00</FaceAmount>
+          <CashValue currency="USD">0.00</CashValue>
+          <MonthlyPremium currency="USD">88.00</MonthlyPremium>
+          <IssueDate>2023-07-01</IssueDate>
+          <TenureYears>3.1</TenureYears>
+          <PaymentMode riskState="false">AutoPay / Direct Debit</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+    <Policyholder holderId="USR-USA-10905">
+      <FullName>Priya Patel</FullName>
+      <DateOfBirth>1995-12-08</DateOfBirth>
+      <City>Boston, MA</City>
+      <Country isoCode="USA">United States</Country>
+      <Email>p.patel@example.com</Email>
+      <Phone>+1-617-555-0163</Phone>
+      <DependentsCount>0</DependentsCount>
+      <Policies>
+        <Policy policyId="POL-USA-10905A">
+          <ProductType>Unit-Linked (Variable Life)</ProductType>
+          <FaceAmount currency="USD">120000.00</FaceAmount>
+          <CashValue currency="USD">15400.00</CashValue>
+          <MonthlyPremium currency="USD">150.00</MonthlyPremium>
+          <IssueDate>2024-01-20</IssueDate>
+          <TenureYears>2.5</TenureYears>
+          <PaymentMode riskState="false">AutoPay / Direct Debit</PaymentMode>
+        </Policy>
+        <!-- Demonstrates one holder with multiple policies -->
+        <Policy policyId="POL-USA-10905B">
+          <ProductType>Term</ProductType>
+          <FaceAmount currency="USD">75000.00</FaceAmount>
+          <CashValue currency="USD">0.00</CashValue>
+          <MonthlyPremium currency="USD">40.00</MonthlyPremium>
+          <IssueDate>2024-01-20</IssueDate>
+          <TenureYears>2.5</TenureYears>
+          <PaymentMode riskState="false">AutoPay / Direct Debit</PaymentMode>
+        </Policy>
+      </Policies>
+    </Policyholder>
+
+  </Policyholders>
+
+  <!-- ================================================================== -->
+  <!-- Bonus: full pipeline wiring for the flagship demo case (Michael)    -->
+  <!-- Shows how one customer-dataset record connects to the rest of the  -->
+  <!-- SOW's five systems (Tables 2A, 2B, 3) for the "live trigger" demo. -->
+  <!-- ================================================================== -->
+  <DemoScenarioWiring holderId="USR-USA-88421" policyId="POL-USA-88421">
+
+    <TelemetryEvent eventId="EVT-90021">
+      <EventType>ADDRESS_UPDATE</EventType>
+      <OldValue city="Chicago" state="IL" country="USA"/>
+      <NewValue city="Austin" state="TX" country="USA"/>
+      <Timestamp>2026-07-28T14:22:10</Timestamp>
+    </TelemetryEvent>
+
+    <BillingTransaction txId="TX-448201">
+      <Status>FAILED</Status>
+      <FailureReason>CARD_EXPIRED_BANK_TRANSITION</FailureReason>
+      <AttemptDate>2026-07-29T08:00:00</AttemptDate>
+    </BillingTransaction>
+
+    <StoryPrediction predictionId="ML-PRED-7712">
+      <StoryTag>Flight Risk</StoryTag>
+      <LapseProbability30Day>0.84</LapseProbability30Day>
+      <RetentionValueUsd>250000.00</RetentionValueUsd>
+      <FitScore>0.96</FitScore>
+      <KeyFeatures failedPayment="true" addressChange="true" highCashValue="true"/>
+      <ModelTimestamp>2026-07-29T08:05:00</ModelTimestamp>
+    </StoryPrediction>
+
+  </DemoScenarioWiring>
+
+</InsuranceCustomerDataset>
