@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liberty Crest - Agentic Policy Servicing & Retention</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for Sentiment Trend Chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#0c4a6e',
+            },
+            story: {
+              flight: '#f43f5e',
+              flightBg: '#ffe4e6',
+              remorse: '#f59e0b',
+              remorseBg: '#fef3c7',
+              growth: '#10b981',
+              growthBg: '#d1fae5',
+              neutral: '#6b7280',
+              neutralBg: '#f3f4f6'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Navigation Header -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-bold text-white text-xl shadow-inner">
+          LC
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-tight">Liberty Crest Insurance</h1>
+          <p class="text-xs text-slate-400">Agentic Policy Servicing & Retention Console</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs & Separate Secondary Routes -->
+      <nav class="flex space-x-1 bg-slate-800 p-1 rounded-lg text-sm font-medium">
+        <button id="nav-queue" onclick="switchTab('queue')" class="px-3.5 py-2 rounded-md transition-all flex items-center space-x-2 bg-sky-600 text-white shadow">
+          <i data-lucide="list-ordered" class="w-4 h-4"></i>
+          <span>Priority Queue</span>
+        </button>
+        <button id="nav-workspace" onclick="switchTab('workspace')" class="px-3.5 py-2 rounded-md transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-700">
+          <i data-lucide="briefcase" class="w-4 h-4"></i>
+          <span>Case Workspace</span>
+        </button>
+        <a href="/portfolio-view" class="px-3.5 py-2 rounded-md transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-700">
+          <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          <span>Portfolio Dashboard</span>
+        </a>
+        <a href="/audit-view" class="px-3.5 py-2 rounded-md transition-all flex items-center space-x-2 text-slate-300 hover:text-white hover:bg-slate-700">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>Audit Viewer</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center space-x-3 text-xs text-slate-300 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Rep: <strong>Alex Vance (REP-101)</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- SCREEN 1: PRIORITY QUEUE -->
+    <section id="screen-queue" class="space-y-6">
+      
+      <!-- Top Metrics Bar -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="glass-card p-4 rounded-xl shadow-sm border-l-4 border-rose-500 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Lapse Risk Exposure</p>
+            <h3 class="text-2xl font-bold text-slate-900 mt-1" id="stat-lapse-usd">$750,000</h3>
+            <p class="text-xs text-rose-600 font-medium mt-1">2 At-Risk Flight Policies</p>
+          </div>
+          <div class="p-3 bg-rose-50 rounded-xl text-rose-600">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl shadow-sm border-l-4 border-emerald-500 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Retention / Upsell Opp</p>
+            <h3 class="text-2xl font-bold text-slate-900 mt-1" id="stat-retention-usd">$286,250</h3>
+            <p class="text-xs text-emerald-600 font-medium mt-1">2 Growth Candidates</p>
+          </div>
+          <div class="p-3 bg-emerald-50 rounded-xl text-emerald-600">
+            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl shadow-sm border-l-4 border-amber-500 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Buyer's Remorse</p>
+            <h3 class="text-2xl font-bold text-slate-900 mt-1">$350,000</h3>
+            <p class="text-xs text-amber-600 font-medium mt-1">2 Early Tenure Hesitations</p>
+          </div>
+          <div class="p-3 bg-amber-50 rounded-xl text-amber-600">
+            <i data-lucide="clock" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="glass-card p-4 rounded-xl shadow-sm border-l-4 border-sky-500 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Active Queue</p>
+            <h3 class="text-2xl font-bold text-slate-900 mt-1" id="stat-total-cases">8 Cases</h3>
+            <p class="text-xs text-sky-600 font-medium mt-1">Ranked by $ × Urgency</p>
+          </div>
+          <div class="p-3 bg-sky-50 rounded-xl text-sky-600">
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Queue Controls & Filters -->
+      <div class="glass-card p-4 rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-3 w-full sm:w-auto">
+          <span class="text-sm font-semibold text-slate-700">Filter Archetype:</span>
+          <select id="filter-archetype" onchange="renderQueueTable()" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+            <option value="ALL">All Archetypes (8)</option>
+            <option value="Flight Risk">Flight Risk</option>
+            <option value="Buyer's Remorse">Buyer's Remorse</option>
+            <option value="Low Lapse / Growth Candidate">Low Lapse / Growth Candidate</option>
+            <option value="No Story">No Active Story</option>
+          </select>
+        </div>
+
+        <div class="text-xs text-slate-500 flex items-center space-x-2">
+          <i data-lucide="info" class="w-4 h-4 text-sky-500"></i>
+          <span>Hierarchy: <strong>Rank → Story Tag → $ Exposure → Recommended Action</strong></span>
+        </div>
+      </div>
+
+      <!-- Priority Queue Table -->
+      <div class="glass-card rounded-xl shadow-sm overflow-hidden border border-slate-200">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-100 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-3.5 px-4">Rank</th>
+                <th class="py-3.5 px-4">Policyholder</th>
+                <th class="py-3.5 px-4">Story Tag</th>
+                <th class="py-3.5 px-4">Urgency</th>
+                <th class="py-3.5 px-4 text-right">$ Exposure / Value</th>
+                <th class="py-3.5 px-4">Recommended Action</th>
+                <th class="py-3.5 px-4 text-center">Status</th>
+                <th class="py-3.5 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="queue-table-body" class="divide-y divide-slate-200 text-slate-800">
+              <!-- Rendered via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <div id="queue-empty-state" class="hidden p-8 text-center text-slate-500 space-y-2">
+          <i data-lucide="check-circle-2" class="w-12 h-12 mx-auto text-emerald-500"></i>
+          <p class="text-base font-medium">No cases currently match this filter criteria.</p>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- SCREEN 2: CASE WORKSPACE -->
+    <section id="screen-workspace" class="hidden space-y-6">
+      
+      <!-- Back to Queue Header -->
+      <div class="flex items-center justify-between">
+        <button onclick="switchTab('queue')" class="inline-flex items-center space-x-2 text-sm font-semibold text-slate-600 hover:text-sky-600 transition">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Priority Queue</span>
+        </button>
+
+        <div class="flex items-center space-x-3">
+          <span class="text-xs text-slate-500">Case Status:</span>
+          <span id="ws-case-status-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-sky-100 text-sky-800 border border-sky-300">
+            ASSIGNED
+          </span>
+        </div>
+      </div>
+
+      <!-- 1. Context Panel -->
+      <div class="glass-card rounded-xl p-6 shadow-sm border border-slate-200 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xl shadow-inner">
+              <span id="ws-avatar">MC</span>
+            </div>
+            <div>
+              <div class="flex items-center space-x-3">
+                <h2 class="text-2xl font-bold text-slate-900" id="ws-holder-name">Michael Carter</h2>
+                <span id="ws-story-tag-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-300">
+                  Flight Risk
+                </span>
+                <span id="ws-fit-score" class="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
+                  96% Fit
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">
+                Holder ID: <span id="ws-holder-id">USR-USA-88421</span> | Policy ID: <span id="ws-policy-id">POL-USA-88421</span> | Location: Austin, TX (Updated)
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-6 text-right">
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-semibold">Face Amount</p>
+              <p class="text-lg font-bold text-slate-900" id="ws-face-amount">$250,000.00</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-semibold">Cash Value</p>
+              <p class="text-lg font-bold text-emerald-600" id="ws-cash-value">$42,500.00</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 uppercase font-semibold">Tenure</p>
+              <p class="text-lg font-bold text-slate-900" id="ws-tenure">4.3 Years</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Signal Badges & Recommended Action -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Detected Trigger Signals</p>
+            <div class="flex flex-wrap gap-2" id="ws-key-features">
+              <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200 flex items-center space-x-1">
+                <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                <span>Failed Payment (Expired Card)</span>
+              </span>
+              <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-sky-50 text-sky-700 border border-sky-200 flex items-center space-x-1">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                <span>Address Change (Chicago → Austin)</span>
+              </span>
+              <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center space-x-1">
+                <i data-lucide="dollar-sign" class="w-3.5 h-3.5"></i>
+                <span>High Cash Value ($42.5k)</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="bg-sky-50/80 p-4 rounded-lg border border-sky-200">
+            <p class="text-xs font-bold text-sky-800 uppercase tracking-wider mb-1">Recommended Action Strategy</p>
+            <p class="text-sm font-bold text-sky-950" id="ws-recommended-action">Retention / AutoPay Setup + Child Education Rider</p>
+            <p class="text-xs text-sky-700 mt-1">Acknowledge tenure & move → resolve payment friction with AutoPay → introduce Child Education Rider (2 dependents).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Voice Engagement Control Section -->
+      <div class="glass-card rounded-xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+              <i data-lucide="mic" class="w-5 h-5 text-sky-600"></i>
+              <span>AI Call Outreach Agent (Gemini Live API)</span>
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Automated autonomous customer voice engagement — no human rep on line during call.</p>
+          </div>
+
+          <button id="btn-start-engagement" onclick="startVoiceEngagement()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 text-white font-bold text-sm shadow-md hover:from-sky-500 hover:to-indigo-500 transition-all flex items-center space-x-2 transform active:scale-95">
+            <i data-lucide="play-circle" class="w-5 h-5"></i>
+            <span>Start AI Voice Engagement</span>
+          </button>
+        </div>
+
+        <!-- Live In-Progress Indicator -->
+        <div id="ws-live-engagement-banner" class="hidden bg-sky-950 text-white p-4 rounded-xl border border-sky-700 flex items-center justify-between animate-pulse">
+          <div class="flex items-center space-x-3">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+            <div>
+              <p class="text-sm font-bold">AI Voice Engagement Session in Progress...</p>
+              <p class="text-xs text-sky-300">Conducting conversation, acknowledging tenure, presenting AutoPay + Rider terms.</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-sky-300 block">Live Sentiment:</span>
+            <span class="text-base font-extrabold text-emerald-400">+0.85 Positive</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Post-Engagement Summary (Transcript + Sentiment Chart + Proposal & Email) -->
+      <div id="ws-post-engagement-section" class="hidden space-y-6">
+
+        <!-- Checkpoints & Sentiment Trend -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Compliance Checkpoints Card -->
+          <div class="glass-card p-5 rounded-xl border border-slate-200 space-y-3">
+            <h4 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+              <i data-lucide="check-square" class="w-4 h-4 text-emerald-600"></i>
+              <span>Verified Checkpoints</span>
+            </h4>
+            <ul class="space-y-2 text-xs font-semibold">
+              <li class="flex items-center space-x-2 text-emerald-700 bg-emerald-50 p-2 rounded-md border border-emerald-200">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>Tenure Acknowledged (4.3 Years)</span>
+              </li>
+              <li class="flex items-center space-x-2 text-emerald-700 bg-emerald-50 p-2 rounded-md border border-emerald-200">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>Payment Authorization Disclosed</span>
+              </li>
+              <li class="flex items-center space-x-2 text-emerald-700 bg-emerald-50 p-2 rounded-md border border-emerald-200">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>Child Education Rider Option Offered</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Sentiment Trend Chart -->
+          <div class="md:col-span-2 glass-card p-5 rounded-xl border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <h4 class="text-sm font-bold text-slate-900 flex items-center space-x-2">
+                <i data-lucide="activity" class="w-4 h-4 text-sky-600"></i>
+                <span>Continuous Sentiment Trend (-1.0 to +1.0)</span>
+              </h4>
+              <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                Avg Sentiment: +0.85
+              </span>
+            </div>
+            <div class="h-32 w-full">
+              <canvas id="sentimentChart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Collapsible Transcript Viewer -->
+        <div class="glass-card rounded-xl border border-slate-200 overflow-hidden">
+          <button onclick="toggleTranscript()" class="w-full px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-bold flex items-center justify-between transition">
+            <span class="flex items-center space-x-2">
+              <i data-lucide="file-text" class="w-4 h-4 text-sky-600"></i>
+              <span>Diarized Session Transcript (Completed Voice Session)</span>
+            </span>
+            <i id="transcript-icon" data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>
+          </button>
+          <div id="transcript-body" class="p-4 bg-slate-900 text-slate-100 font-mono text-xs space-y-3 max-h-60 overflow-y-auto">
+            <!-- Transcript text injected via JS -->
+          </div>
+        </div>
+
+        <!-- Side-by-Side Proposal & Outreach Email Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Proposal Card -->
+          <div class="glass-card p-6 rounded-xl border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h4 class="font-bold text-slate-900 text-base flex items-center space-x-2">
+                <i data-lucide="file-check" class="w-5 h-5 text-sky-600"></i>
+                <span>Priced Policy Proposal</span>
+              </h4>
+              <span class="text-xs font-bold bg-sky-100 text-sky-800 px-2.5 py-1 rounded-full border border-sky-300">
+                DRAFTED
+              </span>
+            </div>
+
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between py-1 border-b border-slate-100">
+                <span class="text-slate-500">Rider Added:</span>
+                <span class="font-bold text-slate-900" id="prop-rider">Child Education Rider</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-slate-100">
+                <span class="text-slate-500">Added Face Amount:</span>
+                <span class="font-bold text-emerald-600" id="prop-face">+$50,000.00</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-slate-100">
+                <span class="text-slate-500">Current Monthly Premium:</span>
+                <span class="font-semibold text-slate-700" id="prop-curr-premium">$450.00 / mo</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-slate-100 bg-emerald-50 p-2 rounded-lg">
+                <span class="text-emerald-800 font-bold">New Monthly Total Premium:</span>
+                <span class="font-extrabold text-emerald-700 text-base" id="prop-new-total">$485.00 / mo</span>
+              </div>
+              <div class="pt-1">
+                <span class="text-xs text-slate-500 block">One-Click Signature Link:</span>
+                <a id="prop-link" href="#" target="_blank" class="text-xs text-sky-600 underline font-mono break-all hover:text-sky-800">
+                  https://libertycrest.com/sign/PROP-88421
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Outreach Email Draft Card -->
+          <div class="glass-card p-6 rounded-xl border border-slate-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h4 class="font-bold text-slate-900 text-base flex items-center space-x-2">
+                <i data-lucide="mail" class="w-5 h-5 text-indigo-600"></i>
+                <span>Outreach Email Preview</span>
+              </h4>
+              <span class="text-xs font-bold bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-full border border-indigo-300">
+                TRANSACTIONAL
+              </span>
+            </div>
+
+            <div class="space-y-3 text-xs">
+              <div>
+                <span class="text-slate-500 block font-semibold">Subject:</span>
+                <p id="email-subject" class="font-bold text-slate-800 bg-slate-100 p-2 rounded-md border border-slate-200 mt-1">
+                  Liberty Crest: Your Policy Retention & Rider Proposal (#POL-USA-88421)
+                </p>
+              </div>
+              <div>
+                <span class="text-slate-500 block font-semibold">Body Preview:</span>
+                <div id="email-body" class="bg-white p-3 rounded-md border border-slate-200 text-slate-700 max-h-44 overflow-y-auto leading-relaxed">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Single Most Prominent Control: Accept & Send -->
+        <div class="glass-card p-6 rounded-xl border-2 border-indigo-500 bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+          <div>
+            <h4 class="text-lg font-extrabold text-white flex items-center space-x-2">
+              <i data-lucide="shield-alert" class="w-5 h-5 text-emerald-400"></i>
+              <span>Human Servicing Rep Approval Control Point</span>
+            </h4>
+            <p class="text-xs text-slate-300 mt-1">
+              Review and approve proposal terms & email outreach before dispatch to customer.
+            </p>
+          </div>
+
+          <div class="flex items-center space-x-3 w-full md:w-auto">
+            <button onclick="approveAndSend()" class="w-full md:w-auto px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-base shadow-lg transition transform active:scale-95 flex items-center justify-center space-x-2">
+              <i data-lucide="send" class="w-5 h-5"></i>
+              <span>ACCEPT & SEND OUTREACH</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsed "Why this?" Agent Reasoning Expander -->
+        <div class="glass-card rounded-xl border border-slate-200 overflow-hidden">
+          <button onclick="toggleReasoning()" class="w-full px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-between transition">
+            <span class="flex items-center space-x-2">
+              <i data-lucide="help-circle" class="w-4 h-4 text-indigo-600"></i>
+              <span>🔍 Why this decision? (Root-Agent Chain-of-Thought Reasoning Trace)</span>
+            </span>
+            <span class="text-xs text-slate-500 font-normal">Collapsed by default per UI Conventions</span>
+          </button>
+          <div id="reasoning-body" class="hidden p-4 bg-slate-900 text-sky-200 font-mono text-xs space-y-2 border-t border-slate-700">
+            <p id="reasoning-text" class="leading-relaxed">
+              Loading root-agent reasoning trace...
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    let currentCases = [];
+    let selectedCase = null;
+    let sentimentChartInstance = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      loadQueueData();
+    });
+
+    function switchTab(tab) {
+      ['queue', 'workspace'].forEach(t => {
+        document.getElementById(`screen-${t}`).classList.add('hidden');
+      });
+
+      document.getElementById(`screen-${tab}`).classList.remove('hidden');
+    }
+
+    async function loadQueueData() {
+      try {
+        const res = await fetch('/queue');
+        const data = await res.json();
+        currentCases = data.cases || [];
+        renderQueueTable();
+      } catch (err) {
+        console.error("Error loading queue:", err);
+      }
+    }
+
+    function renderQueueTable() {
+      const filter = document.getElementById('filter-archetype').value;
+      const tbody = document.getElementById('queue-table-body');
+      tbody.innerHTML = '';
+
+      let filtered = currentCases;
+      if (filter !== 'ALL') {
+        if (filter === 'No Story') {
+          filtered = currentCases.filter(c => !c.storyTag);
+        } else {
+          filtered = currentCases.filter(c => c.storyTag === filter);
+        }
+      }
+
+      if (filtered.length === 0) {
+        document.getElementById('queue-empty-state').classList.remove('hidden');
+        return;
+      } else {
+        document.getElementById('queue-empty-state').classList.add('hidden');
+      }
+
+      filtered.forEach((c, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-sky-50/50 transition cursor-pointer";
+
+        // Story Tag Badge
+        let tagBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">No Story</span>`;
+        if (c.storyTag === 'Flight Risk') {
+          tagBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-300">Flight Risk</span>`;
+        } else if (c.storyTag === "Buyer's Remorse") {
+          tagBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">Buyer's Remorse</span>`;
+        } else if (c.storyTag === "Low Lapse / Growth Candidate") {
+          tagBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Growth Candidate</span>`;
+        }
+
+        // Urgency Pill
+        let urgencyPill = `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-slate-200 text-slate-700">P3-Low</span>`;
+        if (c.urgencyLevel === 'P1-High') {
+          urgencyPill = `<span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-500 text-white shadow-sm">P1-High</span>`;
+        } else if (c.urgencyLevel === 'P2-Medium') {
+          urgencyPill = `<span class="px-2 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800">P2-Medium</span>`;
+        }
+
+        const exposure = c.retentionValueUsd ? `$${c.retentionValueUsd.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-';
+        const action = c.recommendedAction || '<span class="text-slate-400 italic">Needs Rep Assessment</span>';
+
+        tr.innerHTML = `
+          <td class="py-3.5 px-4 font-extrabold text-slate-900">#${c.priorityRank || (idx + 1)}</td>
+          <td class="py-3.5 px-4">
+            <div class="font-bold text-slate-900">${c.holderName || 'Policyholder'}</div>
+            <div class="text-xs text-slate-500">${c.policyId}</div>
+          </td>
+          <td class="py-3.5 px-4">${tagBadge}</td>
+          <td class="py-3.5 px-4">${urgencyPill}</td>
+          <td class="py-3.5 px-4 text-right font-bold text-slate-900">${exposure}</td>
+          <td class="py-3.5 px-4 text-xs font-medium text-slate-700 max-w-xs">${action}</td>
+          <td class="py-3.5 px-4 text-center">
+            <span class="px-2 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">${c.status}</span>
+          </td>
+          <td class="py-3.5 px-4 text-right">
+            <button onclick="openCaseWorkspace('${c.caseId}')" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition shadow-sm">
+              Open Workspace
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function openCaseWorkspace(caseId) {
+      switchTab('workspace');
+      try {
+        const res = await fetch(`/case/${caseId}`);
+        const data = await res.json();
+        const c = data.case;
+        selectedCase = c;
+
+        document.getElementById('ws-holder-name').innerText = c.holderName || 'Policyholder';
+        document.getElementById('ws-holder-id').innerText = c.holderId || '-';
+        document.getElementById('ws-policy-id').innerText = c.policyId || '-';
+        document.getElementById('ws-face-amount').innerText = `$${(c.faceAmount||0).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        document.getElementById('ws-cash-value').innerText = `$${(c.cashValue||0).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        document.getElementById('ws-tenure').innerText = `${c.tenureYears || 0} Years`;
+        document.getElementById('ws-recommended-action').innerText = c.recommendedAction || 'Assess case directly.';
+        document.getElementById('ws-case-status-badge').innerText = c.status || 'ASSIGNED';
+
+        const nameParts = (c.holderName || 'P H').split(' ');
+        document.getElementById('ws-avatar').innerText = (nameParts[0][0] + (nameParts[1]?.[0] || '')).toUpperCase();
+
+        const storyBadge = document.getElementById('ws-story-tag-badge');
+        storyBadge.innerText = c.storyTag || 'No Story Tag';
+        storyBadge.className = c.storyTag === 'Flight Risk' ? 'px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-300' :
+          c.storyTag === "Buyer's Remorse" ? 'px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300' :
+          'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+
+        document.getElementById('ws-fit-score').innerText = c.fitScore ? `${Math.round(c.fitScore * 100)}% Fit` : 'Low Confidence';
+
+        if (data.voiceSession || c.status === 'VOICE_COMPLETED' || c.status === 'PENDING_REP_APPROVAL' || c.status === 'SENT') {
+          showPostEngagementSummary(data);
+        } else {
+          document.getElementById('ws-post-engagement-section').classList.add('hidden');
+          document.getElementById('ws-live-engagement-banner').classList.add('hidden');
+        }
+
+        loadReasoningTrace(caseId);
+
+      } catch (err) {
+        console.error("Error opening case workspace:", err);
+      }
+    }
+
+    async function startVoiceEngagement() {
+      if (!selectedCase) return;
+      const btn = document.getElementById('btn-start-engagement');
+      const liveBanner = document.getElementById('ws-live-engagement-banner');
+
+      btn.disabled = true;
+      btn.innerText = "Engagement Initiating...";
+      liveBanner.classList.remove('hidden');
+
+      try {
+        await fetch(`/case/${selectedCase.caseId}/engage`, { method: 'POST' });
+        
+        await fetch('/agent/invoke', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            caseId: selectedCase.caseId,
+            payload: {}
+          })
+        });
+
+        liveBanner.classList.add('hidden');
+        btn.disabled = false;
+        btn.innerText = "Re-Run AI Voice Engagement";
+
+        await fetch('/agent/invoke', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            caseId: selectedCase.caseId,
+            payload: {}
+          })
+        });
+
+        openCaseWorkspace(selectedCase.caseId);
+
+      } catch (err) {
+        console.error("Error starting engagement:", err);
+        liveBanner.classList.add('hidden');
+        btn.disabled = false;
+      }
+    }
+
+    function showPostEngagementSummary(data) {
+      document.getElementById('ws-post-engagement-section').classList.remove('hidden');
+
+      const session = data.voiceSession || {
+        transcriptText: "AI Agent: Hello Michael, thank you for being a policyholder for 4.3 years...\nCustomer: Yes I moved to Austin and my card changed.",
+        sentimentScore: 0.85
+      };
+
+      const proposal = data.proposal || {
+        riderAdded: "Child Education Rider",
+        addedFaceAmount: 50000,
+        newMonthlyTotal: 485.00,
+        oneClickLink: `https://libertycrest.com/sign/PROP-${selectedCase.policyId}`
+      };
+
+      const outreach = data.outreach || {
+        emailSubject: `Liberty Crest: Policy Servicing & Rider Proposal (#${selectedCase.policyId})`,
+        emailBodyHtml: `<p>Dear ${selectedCase.holderName},</p><p>Thank you for speaking with our Liberty Crest AI Servicing Specialist today...</p>`
+      };
+
+      document.getElementById('transcript-body').innerText = session.transcriptText || 'No transcript text available.';
+
+      document.getElementById('prop-rider').innerText = proposal.riderAdded || 'None';
+      document.getElementById('prop-face').innerText = proposal.addedFaceAmount ? `+$${proposal.addedFaceAmount.toLocaleString()}` : '-';
+      document.getElementById('prop-curr-premium').innerText = `$${(selectedCase.monthlyPremium||450).toFixed(2)} / mo`;
+      document.getElementById('prop-new-total').innerText = `$${(proposal.newMonthlyTotal||485).toFixed(2)} / mo`;
+      document.getElementById('prop-link').innerText = proposal.oneClickLink;
+      document.getElementById('prop-link').href = proposal.oneClickLink;
+
+      document.getElementById('email-subject').innerText = outreach.emailSubject;
+      document.getElementById('email-body').innerHTML = outreach.emailBodyHtml;
+
+      renderSentimentChart();
+    }
+
+    function renderSentimentChart() {
+      const ctx = document.getElementById('sentimentChart').getContext('2d');
+      if (sentimentChartInstance) sentimentChartInstance.destroy();
+
+      sentimentChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['0s (Greeting)', '15s (Tenure Ack)', '30s (Address Update)', '45s (AutoPay Fix)', '60s (Rider Offer)', '75s (Agreed)'],
+          datasets: [{
+            label: 'Customer Sentiment Score (-1.0 to +1.0)',
+            data: [0.10, 0.45, 0.30, 0.70, 0.82, 0.95],
+            borderColor: '#0284c7',
+            backgroundColor: 'rgba(2, 132, 199, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#0369a1',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: -1.0, max: 1.0 }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    async function approveAndSend() {
+      if (!selectedCase) return;
+      try {
+        const res = await fetch(`/case/${selectedCase.caseId}/approve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ approverId: 'REP-101', decision: 'APPROVED' })
+        });
+        const data = await res.json();
+        alert(`Success! Case ${selectedCase.caseId} approved & outreach sent to customer.`);
+        loadQueueData();
+        switchTab('queue');
+      } catch (err) {
+        console.error("Error approving case:", err);
+      }
+    }
+
+    async function loadReasoningTrace(caseId) {
+      try {
+        const res = await fetch(`/audit?caseId=${caseId}`);
+        const data = await res.json();
+        const entries = data.auditEntries || [];
+        if (entries.length > 0) {
+          const last = entries[entries.length - 1];
+          document.getElementById('reasoning-text').innerText = `[${last.timestamp}] Skill: ${last.agentName}\nReasoning: ${last.reasoningSummary}\nInput Refs: ${JSON.stringify(last.inputRefs)}\nOutput Ref: ${JSON.stringify(last.outputRef)}`;
+        } else {
+          document.getElementById('reasoning-text').innerText = 'No reasoning trace logged yet for this case.';
+        }
+      } catch (err) {
+        console.error("Error loading reasoning trace:", err);
+      }
+    }
+
+    function toggleTranscript() {
+      const body = document.getElementById('transcript-body');
+      body.classList.toggle('hidden');
+    }
+
+    function toggleReasoning() {
+      const body = document.getElementById('reasoning-body');
+      body.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
