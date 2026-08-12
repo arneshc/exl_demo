@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liberty Crest - Compliance Audit Trail Viewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0f7ff', 500: '#0284c7', 700: '#075985', 900: '#0c4a6e' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Navigation Header -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-bold text-white text-xl shadow-inner">
+          LC
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-tight">Liberty Crest Insurance</h1>
+          <p class="text-xs text-slate-400">Compliance Audit Trail Viewer (Read-Only)</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex space-x-2 bg-slate-800 p-1 rounded-lg text-sm font-medium">
+        <a href="/" class="px-4 py-2 rounded-md transition text-slate-300 hover:text-white hover:bg-slate-700 flex items-center space-x-2">
+          <i data-lucide="list-ordered" class="w-4 h-4"></i>
+          <span>Servicing Queue</span>
+        </a>
+        <a href="/portfolio-view" class="px-4 py-2 rounded-md transition text-slate-300 hover:text-white hover:bg-slate-700 flex items-center space-x-2">
+          <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          <span>Portfolio Dashboard</span>
+        </a>
+        <a href="/audit-view" class="px-4 py-2 rounded-md transition bg-sky-600 text-white shadow flex items-center space-x-2">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>Compliance Audit</span>
+        </a>
+      </nav>
+
+      <div class="flex items-center space-x-2 text-xs text-emerald-300 bg-emerald-950/80 px-3 py-1.5 rounded-full border border-emerald-700">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>Persona: <strong>Compliance Officer (Read-Only)</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- Title & Search Controls -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      <div>
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">End-to-End Orchestrator Audit Log</h2>
+        <p class="text-sm text-slate-500 mt-1">
+          Searchable, immutable reasoning trace & session audit chain (PRD Compliance US8).
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3 w-full md:w-auto">
+        <div class="relative w-full md:w-96">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+          <input id="audit-search" onkeyup="filterAuditEntries()" type="text" placeholder="Search caseId, sessionId, proposalId, or skill..." class="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm">
+        </div>
+        <button onclick="fetchAuditLog()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg flex items-center space-x-1 shadow">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Filter Chips -->
+    <div class="flex items-center space-x-2 text-xs font-semibold">
+      <span class="text-slate-500">Quick Searches:</span>
+      <button onclick="setSearch('CASE-POL-USA-88421')" class="px-2.5 py-1 bg-rose-100 text-rose-800 hover:bg-rose-200 rounded-full border border-rose-300 transition">
+        Michael Carter Case (CASE-POL-USA-88421)
+      </button>
+      <button onclick="setSearch('VS-')" class="px-2.5 py-1 bg-indigo-100 text-indigo-800 hover:bg-indigo-200 rounded-full border border-indigo-300 transition">
+        Voice Sessions (VS-*)
+      </button>
+      <button onclick="setSearch('PROP-')" class="px-2.5 py-1 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 rounded-full border border-emerald-300 transition">
+        Proposals (PROP-*)
+      </button>
+      <button onclick="setSearch('')" class="px-2.5 py-1 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-full transition">
+        Clear Filter
+      </button>
+    </div>
+
+    <!-- Audit Log Table & Inspector Cards -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="bg-slate-900 text-slate-300 uppercase tracking-wider text-2xs">
+            <tr>
+              <th class="p-3.5">Timestamp</th>
+              <th class="p-3.5">Case ID</th>
+              <th class="p-3.5">Agent / Skill</th>
+              <th class="p-3.5">Reasoning Summary</th>
+              <th class="p-3.5 text-right">Audit Inspector</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body" class="divide-y divide-slate-200 text-slate-800">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div id="audit-empty-state" class="hidden p-8 text-center text-slate-500 space-y-2">
+        <i data-lucide="shield-alert" class="w-10 h-10 mx-auto text-amber-500"></i>
+        <p class="text-sm font-medium">No audit entries found matching search query.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let rawEntries = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      fetchAuditLog();
+    });
+
+    async function fetchAuditLog() {
+      try {
+        const res = await fetch('/audit');
+        const data = await res.json();
+        rawEntries = data.auditEntries || [];
+        renderAuditTable(rawEntries);
+      } catch (err) {
+        console.error("Error loading audit log:", err);
+      }
+    }
+
+    function setSearch(q) {
+      document.getElementById('audit-search').value = q;
+      filterAuditEntries();
+    }
+
+    function filterAuditEntries() {
+      const q = document.getElementById('audit-search').value.toLowerCase();
+      if (!q) {
+        renderAuditTable(rawEntries);
+        return;
+      }
+
+      const filtered = rawEntries.filter(e => {
+        const strVal = JSON.stringify(e).toLowerCase();
+        return strVal.includes(q);
+      });
+
+      renderAuditTable(filtered);
+    }
+
+    function renderAuditTable(entries) {
+      const tbody = document.getElementById('audit-table-body');
+      tbody.innerHTML = '';
+
+      if (entries.length === 0) {
+        document.getElementById('audit-empty-state').classList.remove('hidden');
+        return;
+      } else {
+        document.getElementById('audit-empty-state').classList.add('hidden');
+      }
+
+      entries.forEach((e, idx) => {
+        const rowId = `audit-row-${idx}`;
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+
+        // Agent Badges
+        let agentBadge = `<span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-bold">${e.agentName}</span>`;
+        if (e.agentName === 'voice-engagement') {
+          agentBadge = `<span class="px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 font-bold">voice-engagement</span>`;
+        } else if (e.agentName === 'proposal-generation') {
+          agentBadge = `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">proposal-generation</span>`;
+        } else if (e.agentName === 'policyholder-insight') {
+          agentBadge = `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">policyholder-insight</span>`;
+        }
+
+        const tsFormatted = e.timestamp ? e.timestamp.replace('T', ' ').substring(0, 19) : '-';
+
+        tr.innerHTML = `
+          <td class="p-3.5 text-slate-500 whitespace-nowrap">${tsFormatted}</td>
+          <td class="p-3.5 font-bold text-slate-900">${e.caseId || '-'}</td>
+          <td class="p-3.5">${agentBadge}</td>
+          <td class="p-3.5 text-slate-700 max-w-xl break-words leading-relaxed font-sans text-xs">
+            ${e.reasoningSummary || 'No summary provided.'}
+          </td>
+          <td class="p-3.5 text-right whitespace-nowrap">
+            <button onclick="toggleDetails('${rowId}')" class="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white font-sans text-xs font-semibold rounded border border-slate-700 shadow-sm flex items-center space-x-1 ml-auto">
+              <i data-lucide="file-json" class="w-3.5 h-3.5"></i>
+              <span>Inspect Entry</span>
+            </button>
+          </td>
+        `;
+
+        // Check if outputRef contains voice session transcript
+        const sessionObj = e.outputRef && (e.outputRef.sessionId ? e.outputRef : (e.outputRef.voiceSession || null));
+        const transcriptText = sessionObj ? sessionObj.transcriptText : null;
+
+        const trDetails = document.createElement('tr');
+        trDetails.id = rowId;
+        trDetails.className = "hidden bg-slate-950 text-sky-200 font-mono text-xs";
+        trDetails.innerHTML = `
+          <td colspan="5" class="p-5 space-y-4 border-b-2 border-slate-700">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="text-xs font-bold text-slate-400">Audit Record ID: <strong class="text-white">${e.entryId}</strong></span>
+              <span class="text-xs font-bold text-emerald-400">Timestamp: ${e.timestamp}</span>
+            </div>
+
+            ${transcriptText ? `
+              <div class="bg-slate-900 p-4 rounded-lg border border-sky-800/80 space-y-2">
+                <div class="flex items-center space-x-2 text-sky-400 font-bold">
+                  <i data-lucide="mic" class="w-4 h-4"></i>
+                  <span>Reconstructed Diarized Voice Engagement Session Transcript (Session ID: ${sessionObj.sessionId})</span>
+                </div>
+                <div class="p-3 bg-slate-950 rounded text-slate-200 leading-relaxed font-mono whitespace-pre-wrap text-xs">
+                  ${transcriptText}
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <span class="text-slate-400 font-bold block mb-1">Input References (Request Context):</span>
+                <pre class="bg-slate-900 p-3 rounded border border-slate-800 text-slate-300 overflow-x-auto text-2xs">${JSON.stringify(e.inputRefs, null, 2)}</pre>
+              </div>
+              <div>
+                <span class="text-slate-400 font-bold block mb-1">Output Reference (Produced Payload):</span>
+                <pre class="bg-slate-900 p-3 rounded border border-slate-800 text-emerald-300 overflow-x-auto text-2xs">${JSON.stringify(e.outputRef, null, 2)}</pre>
+              </div>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+        tbody.appendChild(trDetails);
+      });
+
+      lucide.createIcons();
+    }
+
+    function toggleDetails(rowId) {
+      const el = document.getElementById(rowId);
+      if (el) el.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
